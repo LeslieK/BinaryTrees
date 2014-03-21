@@ -17,11 +17,12 @@ class Node(object):
 
 class BST(object):
 
-    def __init__(self, trials=None, maxval=None):
+    def __init__(self, trials=None, maxval=None, title=None):
         self.root = None
         self.count = 0  # counts 'put' compares
+        self.a = None
         if trials:
-            self.a = VisualAnalyzer(trials, maxval)
+            self.a = VisualAnalyzer(trials, maxval, title)
 
     def put(self, key, value):
         self.count = 0
