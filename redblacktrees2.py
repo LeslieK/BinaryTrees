@@ -22,7 +22,7 @@ class Node(object):
 
 class RedBlackBST(object):
 
-    def __init__(self, trials=None, maxval=None):
+    def __init__(self, trials=None, maxval=None, title=None):
         self.root = None
         self._red_count = 0
         self._black_count = 0
@@ -32,8 +32,9 @@ class RedBlackBST(object):
         self.count_compares = 0     # counts compares
         self.count_rotations = 0    # count rotations
         self.count_node_splits = 0  # count node splits
+        self.a = None
         if trials:
-            self.a = VisualAnalyzer(trials, maxval)  # used to plot data
+            self.a = VisualAnalyzer(trials, maxval, title)  # used to plot data
 
     def put(self, key, value):
         self.count_compares = 0
@@ -49,7 +50,8 @@ class RedBlackBST(object):
                     self.black_nodes[key] = self.black_nodes.get(key, 0) + 1
                 return Node(key, value, RED)
 
-            self.count_compares += 1  # book counts compareTo() not primitive < and >
+            # book counts compareTo() not primitive < and >
+            self.count_compares += 1
             if key < x.key:
                 if self._isRed(x):
                     self.red_nodes[key] = self.red_nodes.get(key, 0) + 1
@@ -121,8 +123,10 @@ class RedBlackBST(object):
         self.root = helper_put(self.root, key, value)
         self.root.color = BLACK
         if self.a:
-            self.a.addDataValue(self.count_compares)
+            #self.a.addDataValue(self.count_compares)
             #self.a.addDataValue(self.count_rotations)
+            self.a.addDataValue(self.black_height())
+            #self.a.addDataValue(self.height())
 
         return self.red_nodes, self.black_nodes
 
@@ -140,61 +144,6 @@ class RedBlackBST(object):
 
     def contains(self, key):
         return self.get(key) is not None
-
-    def delMin(self):
-        """
-        deletes min element in BST (excl root)
-        """
-        def helper_delMin(x):
-            if x.left is None and x is self:
-                return "can't delete root"
-            if x.left is None:
-                return x.right
-            x.left = helper_delMin(x.left)
-            x._count = _sizeOf(x.left) + _sizeOf(x.right) + 1
-            return x
-        helper_delMin(self.root)
-
-    def delMax(self):
-        """
-        deletes max element in BST (excl root)
-        """
-        def helper_delMax(x):
-            if x.right is None and x is self:
-                return "can't delete root"
-            if x.right is None:
-                return x.left
-            x.right = helper_delMax(x.right)
-            x._count = _sizeOf(x.left) + _sizeOf(x.right) + 1
-            return x
-        helper_delMax(self.root)
-
-    def delete(self, key):
-        """
-        deletes node with given key
-        """
-        def helper_delete(x, k):
-            if x is None:
-                return
-            if k == self.key:
-                return "can't delete root"
-            if k < x.key:
-                x.left = helper_delete(x.left, k)
-            elif k > x.key:
-                x.right = helper_delete(x.right, k)
-            else:
-                if x.right is None:
-                    return x.left
-                if x.left is None:
-                    return x.right
-                else:
-                    t = x
-                    x = findMin(t.right)
-                    x.right = t.right.delMin()
-                    x.left = t.left
-            #x._count = _sizeOf(x.left) + _sizeOf(x.right) + 1
-            return x
-        helper_delete(self.root, key)
 
     def inOrder(self):
         def helper_inOrder(x):
@@ -428,7 +377,7 @@ if __name__ == "__main__":
 
     t = RedBlackBST()
     for i in range(N):
-        t = t.put(keys[i], i)
+        t.put(keys[i], i)
     t.inOrder()
     print t.internalPathLength(), t.black_height()
 
