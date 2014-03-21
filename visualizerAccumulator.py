@@ -8,13 +8,14 @@ import numpy as np
 
 
 class VisualAnalyzer(object):
-    def __init__(self, trials, maxval):
+    def __init__(self, trials, maxval, title="red black search tree"):
         self.count = 0
         self.total = 0
         self.vals = np.zeros((trials), dtype=np.float64)
         self.means = np.zeros((trials), dtype=np.float64)
         self.maxval = maxval
         self.trials = trials
+        self.title = title
 
     def addDataValue(self, value):
         self.vals[self.count] = value
@@ -31,7 +32,7 @@ class VisualAnalyzer(object):
         axes.set_ylim(0, self.maxval)
         axes.set_xlabel("put operations")
         axes.set_ylabel("cost")
-        axes.set_title("red black search tree")
+        axes.set_title(self.title)
         #axes.set_title("binary search tree")
         #axes.set_title("red-black tree: left and right rotations")
         axes.plot(self.vals, linestyle='*', marker='.', color="gray", markersize=1, label="values")
