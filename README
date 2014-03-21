@@ -1,0 +1,6 @@
+This repo explores binary trees: binary search trees (unbalanced) and Red-Black Search Trees
+(balanced).
+
+Open the python notebooks to see examples of running the code with plots.
+
+The experiments run in these notebooks are motivated by Algorithms, 4th Edition (Sedgewick, Wayne).
