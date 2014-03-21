@@ -1,0 +1,34 @@
+In [222]: run experiments.py -N 1000000 -t 100
+mean/std % red 25.392963 / 0.0333445637398 min/max 25.2962 / 25.4836
+mean/std black height 15.5 / 0.5
+mean/std height 28.18 / 0.698283610004
+
+
+In [223]: run experiments.py -N 500000 -t 100
+mean/std % red 25.38765 / 0.0410224365439 min/max 25.2844 / 25.4916
+mean/std black height 14.88 / 0.324961536185
+mean/std height 26.6 / 0.632455532034
+
+In [26]: run experiments.py -N 50000 -t 100
+mean/std % red 25.40336 / 0.155529773355 min/max 25.03 / 25.818
+mean/std black height 12.0 / 0.0
+mean/std height 21.85 / 0.779422863406
+
+
+In [214]: run experiments.py -N 10000 -t 100
+mean/std % red 25.3713 / 0.340821522208 min/max 24.56 / 26.26
+mean/std black height 10.0 / 0.0
+mean/std height 18.39 / 0.676683086829
+
+
+In [212]: run experiments.py -N 5000 -t 100
+mean/std % red 25.3846 / 0.44915792323 min/max 24.48 / 26.72
+mean/std black height 9.0 / 0.0
+mean/std height 16.95 / 0.683739716559
+
+###############
+avg number compares per search for random node
+N = 10000m trials = 1000
+
+ avgSearchTime(10000, 1000)
+ (12.78771237954945, 12.002, 0.04467661580737663)
