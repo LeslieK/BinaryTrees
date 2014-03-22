@@ -22,7 +22,6 @@ def docSearch(filename, query_list):
     st = indexDoc(filename)
     query_list = map(lambda w: w.lower(), query_list)
 
-    p = None  # a position in document
     word0 = query_list[0]
     min_interval = ""
     for p0 in st[word0]:
