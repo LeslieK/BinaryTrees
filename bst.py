@@ -96,7 +96,7 @@ class BST(object):
 
     def delete(self, key):
         """
-        Hilbert delete
+        Hilbert delete -- use at your own risk!
         deletes node with given key
         """
         def helper_delete(x, k):
@@ -264,6 +264,21 @@ class BST(object):
                 return x.right and helper_select(x.right, k)
             return x.key
         return helper_select(self.root, k)
+
+    def isBST(self):
+        minkey = self.findMin()
+        maxkey = self.findMax()
+
+        def helper_isBST(x, minval, maxval):
+            if x is None:
+                return True
+            if x.key < minval:
+                return False
+            if x.key > maxval:
+                return False
+            return helper_isBST(x.left, minval, x.key) and \
+                helper_isBST(x.right, x.key, maxval)
+        return helper_isBST(self.root, minkey, maxkey)
 
 
 def findMin(tree):
