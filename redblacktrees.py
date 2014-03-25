@@ -388,7 +388,7 @@ class RedBlackBST(object):
                 print("deleted", x.key)
                 return
 
-            if self._isBlack(x.left) and self._isBlack(x.right):
+            if self._isBlack(x.right) and self._isBlack(x.right.left):
                 # x.right is a 2-node: move red link down one level
                 x = self._moveRedRight(x)
 
@@ -585,20 +585,13 @@ if __name__ == "__main__":
     for k in t.range("C", "F"):
         print(k)
 
-    import random
-    random.shuffle(keys)
-    for k in keys:
-        print("key to delete: ", k)
-        t.delete(k)
+    # for k in keys:
+    #     print("key to delete: ", k)
+    #     t.delete(k)
 
-    # for i in range(len(keys) - 1):
-    #     t.deleteMax()
-    #     print
-    #     t.inOrder()
-    #     print
-    # print(t.size())
+    for i in range(len(keys)):
+        t.deleteMax()
 
-    # print(t.deleteMax().size())
 
 
 
