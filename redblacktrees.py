@@ -363,10 +363,105 @@ class RedBlackBST(object):
         return self
 
     def deleteMax(self):
-        pass
+        """
+        delete the max key in a RBTree
+        invariant: current node cannot be a 2-node
+        in terms of bst: x or x.right must be RED
+        """
+        if self._isBlack(self.root.left) and self._isBlack(self.root.right):
+            self.root.color = RED
+
+        def helper_deleteMax(x):
+            """
+            helper to deleteMax from RBTree
+            """
+            if x is None:
+                # tree is empty
+                return "BST underflow"
+
+            if self._isRed(x.left):
+                # left-leaning child => rotate it right
+                x = self._rotateRight(x)
+
+            if x.right is None:
+                # you found the max => delete it
+                print("deleted", x.key)
+                return
+
+            if self._isBlack(x.left) and self._isBlack(x.right):
+                # x.right is a 2-node: move red link down one level
+                x = self._moveRedRight(x)
+
+            # move down the right spine
+            x.right = helper_deleteMax(x.right)
+
+            return self._balance(x)
+
+        self.root = helper_deleteMax(self.root)
+
+        if self.root is not None:
+            self.root.color = BLACK
+        return self
 
     def delete(self, key):
-        pass
+        """
+        delete a key at the bottom in a RBTree
+        invariant: current node cannot be a 2-node
+        in terms of bst: x or one of its children must be RED
+        (x.right or x.left)
+        """
+        def helper_delete(x, key):
+            if key < x.key:
+                # GO LEFT
+                # follow code for deleteMin
+                if self._isRed(x) and self._isBlack(x.left) and \
+                   self._isBlack(x.left.left):
+                    # x.left is a 2-node; push red left
+                    print("calling moveRedLeft")
+                    x = self._moveRedLeft(x)
+                # continue down the left spine
+                x.left = helper_delete(x.left, key)
+            else:
+                # DELETE NODE or GO RIGHT
+                # follow code for deleteMax (not identical)
+                if self._isRed(x.left):
+                    x = self._rotateRight(x)
+                if key == x.key and x.right is None:  # different on this line
+                    # found node to delete (at bottom)
+                    print("deleting bottom key", x.key)
+                    return None
+                if self._isBlack(x.right) and self._isBlack(x.right.left):
+                    # x.right is a 2-node; push red right
+                    print("calling moveRedRight")
+                    x = self._moveRedRight(x)
+
+                # check if current node is node to delete
+                # (this node has 2 children)
+                # EQUAL (not at bottom)
+                if key == x.key:
+                    print("deleting key", key)
+                    # copy successor node (key, value) to this node
+                    x.key, x.value = findMin(x.right)
+                    # then delete successor node
+                    x.right = _deleteMin(self, x.right)
+                else:
+                    # continue down the right spine
+                    x.right = helper_delete(x.right, key)
+
+            return self._balance(x)
+
+        # before recursion
+        if self._isBlack(self.root.left) and self._isBlack(self.root.right):
+            self.root.color = RED
+
+        # recurse down tree and then back up tree
+        self.root = helper_delete(self.root, key)
+
+        # after recursion
+        if self.root:
+            self.root.color = BLACK
+
+        return self
 
     def _moveRedLeft(self, x):
         """
@@ -376,6 +471,9 @@ class RedBlackBST(object):
         then make h.left RED or one of its children RED
         correspondes to transformation on p.442
         """
+        assert(x is not None)
+        assert(self._isRed(x) and self._isBlack(x.left) and
+               self._isBlack(x.left.left))
         x = self._flipColors(x)
         if self._isRed(x.right.left):
             # left 2-node can borrow from its siblings
@@ -384,6 +482,21 @@ class RedBlackBST(object):
             # why isn't this invoked (see booksite code)?
             # is it because _balance splits nodes on the way up?
             self._flipColors(x)  # splits nodes on the way down
+        return x
+
+    def _moveRedRight(self, x):
+        """
+        used to delete max in RBTree
+        move red links down the right spine of RBTree
+        Assuming that x is red and both x.right and x.right.left are black,
+        make x.right or one of its children red.
+        """
+        assert(x is not None)
+        assert(self._isRed(x) and self._isBlack(x.left) and
+               self._isBlack(x.right))
+        x = self._flipColors(x)
+        if self._isRed(x.left.left):
+            x = self._rotateRight(x)
         return x
 
 
@@ -427,10 +540,37 @@ def _in_order_g(node):
         for x in _in_order_g(node.right):
             yield x
 
+
+def _deleteMin(tree, x):
+            """
+            delete the key-value pair with the min key rooted at x
+            """
+            if x is None:
+                # tree is empty
+                return "BST underflow"
+
+            if x.left is None:
+                # found min => delete it
+                return
+
+            if tree._isRed(x) and tree._isBlack(x.left) and \
+                    tree._isBlack(x.left.left):
+                # x.left is a 2-node
+                print("calling moveRedLeft")
+                x = tree._moveRedLeft(x)
+
+            x.left = _deleteMin(tree, x.left)
+
+            return tree._balance(x)
+
 #################################################
 if __name__ == "__main__":
 
-    keys = list("ABCDEFG")
+    import string
+
+    keys = list(string.uppercase)
+    import random
+    random.shuffle(keys)
     N = len(keys)
 
     t = RedBlackBST()
@@ -445,14 +585,20 @@ if __name__ == "__main__":
     for k in t.range("C", "F"):
         print(k)
 
+    import random
+    random.shuffle(keys)
+    for k in keys:
+        print("key to delete: ", k)
+        t.delete(k)
+
     # for i in range(len(keys) - 1):
-    #     t.deleteMin()
+    #     t.deleteMax()
     #     print
     #     t.inOrder()
     #     print
     # print(t.size())
 
-    # print(t.deleteMin().size())
+    # print(t.deleteMax().size())
 
 
 
