@@ -43,13 +43,16 @@ class GeneralizedQueue(object):
         """
         delete the ith item from the queue
         """
+        value = self.peek(i)
         self.queue.delete(i)
-        pass
+        return value
 
 ###################################################
 if __name__ == "__main__":
     q = GeneralizedQueue()
-    keys = "ABCDEFGHIJKLMNOP"
+
+    import string
+    keys = list(string.uppercase)
     for k in keys:
         q.append(k)
 
@@ -64,10 +67,13 @@ if __name__ == "__main__":
 
     q.append('ZZZZ')
 
+    print("deleting")
     for i in range(len(keys) / 2):
-        print(q.pop())
+        print(q.delete(i + 1))
 
     print(q.peek(0))
+
+
 
 
 
