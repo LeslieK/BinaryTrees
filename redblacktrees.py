@@ -238,11 +238,13 @@ class RedBlackBST(object):
         - no consecutive red links (parent of a red node cannot be red)
         """
         def helper_is23(x):
+            if x is None:
+                return True
             if self._isRed(x) and self._isRed(x.left):
                 return False
             if self._isBlack(x) and self._isRed(x.right):
                 return False
-            return True
+            return helper_is23(x.left) and helper_is23(x.right)
         return helper_is23(self.root)
 
     def isRedBlackBST(self):
@@ -570,12 +572,13 @@ def _deleteMin(tree, x):
 #################################################
 if __name__ == "__main__":
 
-    keys = list("ABCDEFGHIJKLMNO")
+    keys = list("ABCDEFGHIJKLMNO")[::-1]
     N = len(keys)
 
     t = RedBlackBST()
     for i in range(N):
         t.put(keys[i], i)
+        print("height: ", t.height())
     t.inOrder()
     t.isRedBlackBST()
     t.height()
@@ -598,11 +601,11 @@ if __name__ == "__main__":
     #t.deleteMax()
     #print(t.size())
 
-    import random
-    random.shuffle(keys)
-    for k in keys:
-        print("key to delete: ", k)
-        t.delete(k)
+    # import random
+    # random.shuffle(keys)
+    # for k in keys:
+    #     print("key to delete: ", k)
+    #     t.delete(k)
 
 
 
